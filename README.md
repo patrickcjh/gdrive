@@ -15,10 +15,7 @@ If you want to compile from source you need the [go toolchain](http://golang.org
 Version 1.5 or higher.
 
 ## Installation
-Download your version of `gdrive` from https://drive.google.com/drive/folders/12GSQhLLdKDdKzq_a-7WOrip5HnFmm1v9.
-
-On unix systems
-run `chmod +x gdrive` after download to make the binary executable.
+Download `gdrive` from one of the [links in the latest release](https://github.com/patrickcjh/gdrive/releases).
 The first time gdrive is launched (i.e. run `gdrive about` in your
 terminal not just `gdrive`), you will be prompted for a verification code.
 The code is obtained by following the printed url and authenticating with the
