@@ -13,7 +13,7 @@ type FileInfoArgs struct {
 }
 
 func (self *Drive) Info(args FileInfoArgs) error {
-	f, err := self.service.Files.Get(args.Id).SupportsTeamDrives(true).Fields("id", "name", "size", "createdTime", "modifiedTime", "md5Checksum", "mimeType", "parents", "shared", "description", "webContentLink", "webViewLink").Do()
+	f, err := self.service.Files.Get(args.Id).SupportsTeamDrives(true).Fields("id", "name", "size", "createdTime", "modifiedTime", "md5Checksum", "mimeType", "parents", "teamDriveId", "properties", "appProperties", "shared", "description", "webContentLink", "webViewLink").Do()
 	if err != nil {
 		return fmt.Errorf("Failed to get file: %s", err)
 	}
@@ -44,6 +44,16 @@ type PrintFileInfoArgs struct {
 func PrintFileInfo(args PrintFileInfoArgs) {
 	f := args.File
 
+	properties := ""
+	for k, v := range f.Properties {
+		properties = fmt.Sprintf("%s\n  %s: %s", properties, k, v)
+	}
+
+	appProperties := ""
+	for k, v := range f.AppProperties {
+		appProperties = fmt.Sprintf("%s\n  %s: %s", appProperties, k, v)
+	}
+
 	items := []kv{
 		kv{"Id", f.Id},
 		kv{"Name", f.Name},
@@ -56,6 +66,9 @@ func PrintFileInfo(args PrintFileInfoArgs) {
 		kv{"Md5sum", f.Md5Checksum},
 		kv{"Shared", formatBool(f.Shared)},
 		kv{"Parents", formatList(f.Parents)},
+		kv{"TeamDriveId", f.TeamDriveId},
+		kv{"Properties", properties},
+		kv{"AppProperties", appProperties},
 		kv{"ViewUrl", f.WebViewLink},
 		kv{"DownloadUrl", f.WebContentLink},
 	}
