@@ -51,9 +51,11 @@ func (self *Drive) UploadSync(args UploadSyncArgs) error {
 
 	fmt.Fprintf(args.Out, "Found %d local files and %d remote files\n", len(files.local), len(files.remote))
 
-	// Ensure that there is enough free space on drive
-	if ok, msg := self.checkRemoteFreeSpace(missingFiles, changedFiles); !ok {
-		return fmt.Errorf(msg)
+	// Ensure that there is enough free space on drive (skip if syncing to a team drive)
+	if rootDir.TeamDriveId == "" {
+		if ok, msg := self.checkRemoteFreeSpace(missingFiles, changedFiles); !ok {
+			return fmt.Errorf(msg)
+		}
 	}
 
 	// Ensure that we don't overwrite any remote changes
@@ -95,7 +97,7 @@ func (self *Drive) UploadSync(args UploadSyncArgs) error {
 }
 
 func (self *Drive) prepareSyncRoot(args UploadSyncArgs) (*drive.File, error) {
-	fields := []googleapi.Field{"id", "name", "mimeType", "appProperties"}
+	fields := []googleapi.Field{"id", "name", "mimeType", "teamDriveId", "appProperties"}
 	f, err := self.service.Files.Get(args.RootId).SupportsTeamDrives(true).Fields(fields...).Do()
 	if err != nil {
 		return nil, fmt.Errorf("Failed to find root dir: %s", err)
