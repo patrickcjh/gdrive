@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/petrpulc/gdrive/cli"
+	"github.com/patrickcjh/gdrive/cli"
 )
 
 const Name = "gdrive"
